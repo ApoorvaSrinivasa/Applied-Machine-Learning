@@ -4,3 +4,7 @@
 ### HW1
 #### Naive Bayes and Random Forest Decision Trees Implementation
 On MNIST and pima-indians-diabetes dataset
+
+### HW2
+#### Support Vector Machines (Using Stocastic Gradient Descent)
+On: Adult Data Set; Source: https://archive.ics.uci.edu/ml/datasets/Adult
