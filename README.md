@@ -1,5 +1,6 @@
 # Applied-Machine-Learning
 ## Spring-2019 CS 498 - UIUC
+With Prof.David Forsyth
 
 ### HW1
 #### Naive Bayes(w/o library) and Random Forest Decision Trees Implementation 
