@@ -16,3 +16,4 @@ On :Iris dataset and 4 noisy versions of the Iris dataset
 
 ### HW4
 #### Principal Coordinate Analysis
+On CIFAR-10 
