@@ -15,5 +15,5 @@ On: Adult Data Set; Source: https://archive.ics.uci.edu/ml/datasets/Adult
 On :Iris dataset and 4 noisy versions of the Iris dataset
 
 ### HW4
-#### Principal Coordinate Analysis
-On CIFAR-10 
+#### Principal Coordinate Analysis (w/o library)
+On CIFAR-10 dataset
