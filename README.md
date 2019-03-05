@@ -7,7 +7,7 @@ With Prof.David Forsyth
 On MNIST and pima-indians-diabetes dataset
 
 ### HW2
-#### Support Vector Machines (Using Stocastic Gradient Descent)
+#### Support Vector Machines (Using Stocastic Gradient Descent) (w/o library)
 On: Adult Data Set; Source: https://archive.ics.uci.edu/ml/datasets/Adult
 
 ### HW3
