@@ -1,0 +1,171 @@
+---
+title: "HW6 : Outlier Analysis"
+author: "Apoorva Srinivasa, Julia Tcholakova "
+date: "3/4/2019"
+output: pdf_document
+---
+
+
+# Code for regression and resulting model.
+
+
+```{r }
+housing_data <- read.csv("housing.data.csv", header = FALSE)
+colnames(housing_data) <- c("CRIM","ZN","INDUS","CHAS" ,"NOX" , "RM" , "AGE" , "DIS" ,"RAD" ,
+                            "TAX" ,"PTRATIO", "B" , "LSTAT" , "MEDV" )
+fit <- lm(MEDV~ ., data =housing_data)
+summary(fit)
+```
+
+\pagebreak
+
+# Diagnostic plot 
+
+```{r pressure,fig.height= 7, echo=FALSE}
+par(mfrow=c(2,2))
+plot(fit)
+```
+
+
+
+```
+On closely observing the Std Residuals Vs Fitted plot, we see that the point indexes - 369, 373, 372 
+have standardized residuals that are more than 4 std.deviations away from the mean and also high 
+cook's distance. Additionally, the rows 366, 381 have both high Cook's distance (Those points that 
+are greater than 4/length( all cooksdistances)) as well as high leverage(Those points that have 
+more than 3 times the mean of the leverages), which is not favourable . Hence we will consider 
+these 5 points as outliers and remove them from our dataset. After removing the five points 
+that have questionably high standardized residuals, levergae and Cook's distance, we build 
+a new model and observe the resulting plots.
+On examining the plots from the new model, we find more point indexes, 368, 370, 371 and 413, have
+very high Standarized residuals and Cook's distance. Hence the final model is built after removing
+all these observations.
+```
+
+\pagebreak
+
+# New Diagnostic plot 
+
+```{r fig.height= 7, echo=FALSE}
+##### Checking for outliers using leverage, Cook's distance and Standardized residuals
+# Leverage cut off 3 times mean value
+high_lev <- as.numeric(names(hatvalues(fit)[hatvalues(fit) > 3 * mean(hatvalues(fit))]))
+# Std residuals
+std.res <- rstandard(fit)[abs(rstandard(fit)) > 4]
+possible_outliers <- as.numeric(names(std.res))
+# Cooks distance cut off greater than 4
+high_cooks <- as.numeric(names(cooks.distance(fit)[cooks.distance(fit) > 4 / length(cooks.distance(fit))]))
+# Remove the points which have both high leverage and high Cook's distance
+high_lev_cooks <- high_lev[high_lev %in% high_cooks]
+possible_outliers <- c(possible_outliers,high_lev_cooks)
+
+outlier_treated_housing_data <- housing_data[-c(possible_outliers),]
+outlier_fit <- lm(MEDV~ ., data =outlier_treated_housing_data)
+
+
+std.res1 <- rstandard(outlier_fit)[abs(rstandard(outlier_fit)) > 4]
+possible_outliers1 <- as.numeric(names(std.res1))
+outlier_treated_housing_data <- housing_data[-c(possible_outliers,possible_outliers1),]
+outlier_fit <- lm(MEDV~ ., data =outlier_treated_housing_data)
+
+# Diagnistic Plot
+par(mfrow=c(2,2))
+plot(outlier_fit)
+```
+
+\pagebreak
+
+# Code for regression model after removing outliers
+
+```{r fig.height= 7, eval = FALSE}
+# Checking for outliers using leverage, Cook's distance and Standardized residuals
+# Leverage cut off 3 times mean value
+high_lev <- as.numeric(names(hatvalues(fit)[hatvalues(fit) > 3 * mean(hatvalues(fit))]))
+# Std residuals
+std.res <- rstandard(fit)[abs(rstandard(fit)) > 4]
+possible_outliers <- as.numeric(names(std.res))
+# Cooks distance cut off greater than 4
+high_cooks <- as.numeric(names(cooks.distance(fit)[cooks.distance(fit) > 4 / 
+                                                     length(cooks.distance(fit))]))
+# Points which have both high leverage and high Cook's distance
+high_lev_cooks <- high_lev[high_lev %in% high_cooks]
+possible_outliers <- c(possible_outliers,high_lev_cooks)
+
+
+outlier_treated_housing_data <- housing_data[-c(possible_outliers),]
+outlier_fit <- lm(MEDV~ ., data =outlier_treated_housing_data)
+
+par(mfrow=c(2,2))
+plot(outlier_fit)
+
+# Repeating outlier removal step
+std.res1 <- rstandard(outlier_fit)[abs(rstandard(outlier_fit)) > 4]
+possible_outliers1 <- as.numeric(names(std.res1))
+outlier_treated_housing_data <- housing_data[-c(possible_outliers,possible_outliers1),]
+outlier_fit <- lm(MEDV~ ., data =outlier_treated_housing_data)
+possible_outliers1
+
+# Diagnistic Plot
+par(mfrow=c(2,2))
+plot(outlier_fit)
+```
+
+\pagebreak
+
+# Box_Cox transformation Plot and choosing best value for Lamda
+
+```{r , echo=FALSE}
+library(MASS)
+library(faraway)
+bc <- boxcox(outlier_fit, plotit = TRUE)
+#Code to obtain best lamda
+best_lamda <- bc$x[which(bc$y ==max(bc$y))] 
+```
+
+##  The best value of Lamda is  `r best_lamda` 
+
+\pagebreak
+
+# Standardized Residuals Plot and True Vs Fitted plot after Box-Cox
+
+```{r , echo=FALSE}
+boxcox_fit <- lm ((( MEDV ^ best_lamda) - 1 )/ best_lamda ~ ., data = outlier_treated_housing_data)
+# Standardized Residuals Vs Fitted
+reverse_transformed_y <- ((boxcox_fit$fitted.values *best_lamda)+1)^(1/best_lamda)
+plot(reverse_transformed_y, rstandard(boxcox_fit), ylab="Standardized Residuals", xlab="Fited Value", main="Processed Data")
+abline(0, 0, col='red')    
+
+
+plot(reverse_transformed_y, outlier_treated_housing_data$MEDV, main ="Fitted Vs True House Price", xlab="Fitted House Price", ylab="True House Price") 
+abline(1,1, col='red')    
+
+```
+
+\pagebreak
+
+# Code for Box-Cox transformation and regression
+
+```{r fig.height= 7, eval = FALSE}
+
+bc <- boxcox(outlier_fit, plotit = TRUE)
+#Code to obtain best lamda
+best_lamda <- bc$x[which(bc$y ==max(bc$y))] 
+
+boxcox_fit <- lm ((( MEDV ^ best_lamda) - 1 )/ best_lamda ~ ., 
+                  data = outlier_treated_housing_data)
+
+# Standardized Residuals Vs Fitted
+reverse_transformed_y <- ((boxcox_fit$fitted.values *best_lamda)+1)^(1/best_lamda)
+plot(reverse_transformed_y, rstandard(boxcox_fit), ylab="Standardized Residuals",
+     xlab="Fited Value", main="Processed Data")
+abline(0, 0, col='red')    
+
+#True Vs Fitted Plot
+plot(reverse_transformed_y, outlier_treated_housing_data$MEDV, 
+     main ="Fitted Vs True House Price", xlab="Fitted House Price", ylab="True House Price") 
+abline(1,1, col='red') 
+```
+
+
+
+
