@@ -17,3 +17,7 @@ On :Iris dataset and 4 noisy versions of the Iris dataset
 ### HW4
 #### Principal Coordinate Analysis (w/o library)
 On CIFAR-10 dataset
+
+### HW5
+#### Classifying with Variable Length Inputs
+On Accelerometer signals of daily activities
