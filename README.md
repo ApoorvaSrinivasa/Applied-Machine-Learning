@@ -21,3 +21,6 @@ On CIFAR-10 dataset
 ### HW5
 #### Classifying with Variable Length Inputs
 On Accelerometer signals of daily activities
+
+### HW6
+#### Outlier Detection
