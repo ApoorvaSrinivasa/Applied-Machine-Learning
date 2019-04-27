@@ -25,3 +25,7 @@ On Accelerometer signals of daily activities
 ### HW6
 #### Outlier Detection
 On Housing Dataset :https://archive.ics.uci.edu/ml/machine-learning-databases/housing/housing.names
+
+### HW7
+#### Text Bag-of-Words Search and Classification
+On Yelp reviews Dataset
