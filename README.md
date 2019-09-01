@@ -29,3 +29,15 @@ On Housing Dataset :https://archive.ics.uci.edu/ml/machine-learning-databases/ho
 ### HW7
 #### Text Bag-of-Words Search and Classification
 On Yelp reviews Dataset
+
+### HW8
+#### Artificial Neural Networks 
+On MNIST image
+
+### HW9
+#### Variational Autoencoders
+On MNIST dataset
+
+### HW10
+#### Image classification
+On CIFAR 10 data
